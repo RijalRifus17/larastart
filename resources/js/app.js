@@ -22,7 +22,8 @@ var routes = [
 ]
 
 const router = new VueRouter({
-    routes
+    mode: 'history',
+    routes,
 })
 /**
  * The following block of code may be used to automatically register your

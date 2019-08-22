@@ -52244,6 +52244,7 @@ var routes = [{
   component: _components_Profile_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  mode: 'history',
   routes: routes
 });
 /**

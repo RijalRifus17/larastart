@@ -170,7 +170,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </router-link>
           </li>
           <li class="nav-item has-treeview menu-open">
-            <router-link to="#" class="nav-link active">
+            <router-link to="#" class="nav-link">
               <i class="nav-icon fas fa-cog"></i>
               <p>
                 Management
@@ -179,7 +179,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </router-link>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <router-link to="#" class="nav-link active">
+                <router-link to="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Active Page</p>
                 </router-link>
