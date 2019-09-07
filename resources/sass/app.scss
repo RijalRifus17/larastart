@@ -15,8 +15,19 @@ $fa-font-path: "../webfonts";
 
 .router-link-exact-active {
     background: #3f51b5;
-    color: white!important;
+    color: white !important;
 }
+
 .router-link-exact-active:hover {
-    background: #3f51b5!important;
+    background: #3f51b5 !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
