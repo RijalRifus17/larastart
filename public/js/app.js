@@ -1995,27 +1995,62 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    loadUsers: function loadUsers() {
+    deleteUser: function deleteUser(id) {
       var _this = this;
+
+      swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        _this.form["delete"]('/api/user/' + id).then(function () {
+          if (result.value) {
+            swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+
+            _this.loadUsers();
+          }
+        })["catch"](function () {
+          swal('Failed!', 'Ada kesalahan', 'warning');
+        });
+      });
+    },
+    loadUsers: function loadUsers() {
+      var _this2 = this;
 
       axios.get('api/user').then(function (_ref) {
         var data = _ref.data;
-        return _this.users = data.data;
+        return _this2.users = data.data;
       });
     },
     createUser: function createUser() {
+      var _this3 = this;
+
       this.$Progress.start();
-      this.form.post('api/user');
-      $('#add-user').modal('hide');
-      toast.fire({
-        type: 'success',
-        title: 'User created in successfully'
+      this.form.post('api/user').then(function () {
+        Fire.$emit('AfterCreate');
+        $('#add-user').modal('hide');
+        toast.fire({
+          type: 'success',
+          title: 'User created in successfully'
+        });
+
+        _this3.$Progress.finish();
+      })["catch"](function () {
+        swal('Failed!', 'Ada kesalahan', 'warning');
       });
-      this.$Progress.finish();
     }
   },
   created: function created() {
+    var _this4 = this;
+
     this.loadUsers();
+    Fire.$on('AfterCreate', function () {
+      _this4.loadUsers();
+    });
   }
 });
 
@@ -59034,7 +59069,23 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _vm._m(3, true)
+                        _c("td", [
+                          _vm._m(3, true),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.deleteUser(user.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash text-red" })]
+                          )
+                        ])
                       ])
                     }),
                     0
@@ -59389,14 +59440,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { attrs: { href: "" } }, [
-        _c("i", { staticClass: "fa fa-edit" })
-      ]),
-      _vm._v(" "),
-      _c("a", { attrs: { href: "" } }, [
-        _c("i", { staticClass: "fa fa-trash text-red" })
-      ])
+    return _c("a", { attrs: { href: "" } }, [
+      _c("i", { staticClass: "fa fa-edit" })
     ])
   },
   function() {
@@ -74519,6 +74564,7 @@ Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_6___default.a, {
   height: '2px'
 });
 window.swal = sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a;
+window.Fire = new Vue();
 var Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_7___default.a.mixin({
   toast: true,
   position: 'top-end',

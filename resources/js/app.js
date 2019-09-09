@@ -66,6 +66,7 @@ Vue.use(VueProgressBar, {
 
 window.swal = Swal
 
+window.Fire = new Vue()
 
 const Toast = Swal.mixin({
     toast: true,

@@ -67,7 +67,7 @@
                                                 <a href="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <a href="">
+                                                <a href="" @click.prevent="deleteUser(user.id)">
                                                     <i class="fa fa-trash text-red"></i>
                                                 </a>
                                             </td>
@@ -159,25 +159,67 @@
             }
         },
         methods: {
+            deleteUser(id) {
+                swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        this.form.delete('/api/user/' + id).then(() => {
+                            if (result.value) {
+
+                                swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                                )
+                                this.loadUsers()
+                            }
+                        }).catch(() =>{
+                            swal(
+                                'Failed!', 'Ada kesalahan', 'warning'
+                            )
+                        })
+                    
+                })
+            },
             loadUsers() {
                 axios.get('api/user').then(({ data }) => (this.users = data.data))
             },
             createUser() {
                 this.$Progress.start()
+                
                 this.form.post('api/user')
+                .then(() => {
 
-                $('#add-user').modal('hide')
+                    Fire.$emit('AfterCreate')
+                    $('#add-user').modal('hide')
+                    
+                    toast.fire({
+                        type: 'success',
+                        title: 'User created in successfully'
+                    })
+                                    
                 
-                toast.fire({
-                    type: 'success',
-                    title: 'User created in successfully'
+                    this.$Progress.finish()
+                
                 })
-                
-                this.$Progress.finish()
+                .catch(() =>{
+                    swal(
+                        'Failed!', 'Ada kesalahan', 'warning'
+                    )
+                })
             }
         },
         created() {
             this.loadUsers()
+            Fire.$on('AfterCreate', () => {
+                this.loadUsers()
+            })
         }
     }
 
