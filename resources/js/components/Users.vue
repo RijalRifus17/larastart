@@ -25,7 +25,7 @@
                                 <h3 class="card-title">Users Table</h3>
 
                                 <div class="card-tools">
-                                    <button class="btn btn-success" data-toggle="modal" data-target="#add-user">
+                                    <button class="btn btn-success" @click="newUser">
                                         Add New
                                         <i class="fa fa-user-plus"></i>
                                     </button>
@@ -64,7 +64,7 @@
                                                 {{ user.created_at | myDate}}
                                             </td>
                                             <td>
-                                                <a href="">
+                                                <a href="" @click.prevent="editUser(user)">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                                 <a href="" @click.prevent="deleteUser(user.id)">
@@ -90,16 +90,17 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" v-show="!editMode" id="exampleModalLabel">Add New</h5>
+                    <h5 class="modal-title" v-show="editMode" id="exampleModalLabel">Update</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="createUser">
+                <form @submit.prevent="editMode ? editUser() : createUser()">
+                    
                     <div class="modal-body">
                         <div class="form-group">
-                            <input v-model="form.name" type="text" name="name"
-                                placeholder="Name"
+                                <input v-model="form.name" type="text" name="name" placeholder="Name"
                                 class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                             <has-error :form="form" field="name"></has-error>
                         </div>
@@ -133,7 +134,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button v-show="editMode" type="submit" class="btn btn-primary">Update</button>
+                        <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
                     </div>
                 </form>
                 
@@ -147,6 +149,7 @@
     export default {
         data () {
             return {
+                editMode: false,
                 users: {},
                 form: new Form({
                     name: '',
@@ -159,7 +162,23 @@
             }
         },
         methods: {
+            updateUser() {
+                console.log('editing data');
+                
+            },
+            editUser(user) {
+                this.editMode = true
+                this.form.reset()
+                $('#add-user').modal('show')
+                this.form.fill(user)
+            },
+            newUser() {
+                this.editMode = false
+                this.form.reset()
+                $('#add-user').modal('show')
+            },
             deleteUser(id) {
+                this.form.reset()
                 swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -169,22 +188,22 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
-                        this.form.delete('/api/user/' + id).then(() => {
+                        console.log(result);
+                        
                             if (result.value) {
-
-                                swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
-                                'success'
-                                )
-                                this.loadUsers()
+                                this.form.delete('/api/user/' + id).then(() => {
+                                    swal.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                    )
+                                    Fire.$emit('AfterCreate')
+                                }).catch(() =>{
+                                    swal(
+                                        'Failed!', 'Ada kesalahan', 'warning'
+                                    )
+                                })
                             }
-                        }).catch(() =>{
-                            swal(
-                                'Failed!', 'Ada kesalahan', 'warning'
-                            )
-                        })
-                    
                 })
             },
             loadUsers() {
