@@ -96,7 +96,7 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="editMode ? editUser() : createUser()">
+                <form @submit.prevent="editMode ? updateUser() : createUser()">
                     
                     <div class="modal-body">
                         <div class="form-group">
@@ -152,6 +152,7 @@
                 editMode: false,
                 users: {},
                 form: new Form({
+                    id: '',
                     name: '',
                     email: '',
                     password: '',
@@ -163,8 +164,16 @@
         },
         methods: {
             updateUser() {
-                console.log('editing data');
+                // console.log('editing data');
+                this.$Progress.start()
                 
+                this.form.put("/api/user/" + this.form.id)
+                .then(() => {
+                    
+                })
+                .catch(() => {
+                    this.$Progress.fail()
+                })
             },
             editUser(user) {
                 this.editMode = true
@@ -227,10 +236,8 @@
                     this.$Progress.finish()
                 
                 })
-                .catch(() =>{
-                    swal(
-                        'Failed!', 'Ada kesalahan', 'warning'
-                    )
+                .catch((err) =>{
+                    this.$Progress.fail()
                 })
             }
         },

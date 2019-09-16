@@ -1988,6 +1988,7 @@ __webpack_require__.r(__webpack_exports__);
       editMode: false,
       users: {},
       form: new Form({
+        id: '',
         name: '',
         email: '',
         password: '',
@@ -1999,7 +2000,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updateUser: function updateUser() {
-      console.log('editing data');
+      var _this = this;
+
+      // console.log('editing data');
+      this.$Progress.start();
+      this.form.put("/api/user/" + this.form.id).then(function () {})["catch"](function () {
+        _this.$Progress.fail();
+      });
     },
     editUser: function editUser(user) {
       this.editMode = true;
@@ -2013,7 +2020,7 @@ __webpack_require__.r(__webpack_exports__);
       $('#add-user').modal('show');
     },
     deleteUser: function deleteUser(id) {
-      var _this = this;
+      var _this2 = this;
 
       this.form.reset();
       swal.fire({
@@ -2028,7 +2035,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(result);
 
         if (result.value) {
-          _this.form["delete"]('/api/user/' + id).then(function () {
+          _this2.form["delete"]('/api/user/' + id).then(function () {
             swal.fire('Deleted!', 'Your file has been deleted.', 'success');
             Fire.$emit('AfterCreate');
           })["catch"](function () {
@@ -2038,15 +2045,15 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     loadUsers: function loadUsers() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('api/user').then(function (_ref) {
         var data = _ref.data;
-        return _this2.users = data.data;
+        return _this3.users = data.data;
       });
     },
     createUser: function createUser() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.$Progress.start();
       this.form.post('api/user').then(function () {
@@ -2057,18 +2064,18 @@ __webpack_require__.r(__webpack_exports__);
           title: 'User created in successfully'
         });
 
-        _this3.$Progress.finish();
-      })["catch"](function () {
-        swal('Failed!', 'Ada kesalahan', 'warning');
+        _this4.$Progress.finish();
+      })["catch"](function (err) {
+        _this4.$Progress.fail();
       });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.loadUsers();
     Fire.$on('AfterCreate', function () {
-      _this4.loadUsers();
+      _this5.loadUsers();
     });
   }
 });
@@ -59211,7 +59218,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      _vm.editMode ? _vm.editUser() : _vm.createUser()
+                      _vm.editMode ? _vm.updateUser() : _vm.createUser()
                     }
                   }
                 },
@@ -75019,8 +75026,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/rijalrifus/WebDev/Latihan/Laravel/laravue/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/rijalrifus/WebDev/Latihan/Laravel/laravue/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/rijalrifus/WebDev/Latihan/Laravel/larastart/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/rijalrifus/WebDev/Latihan/Laravel/larastart/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
