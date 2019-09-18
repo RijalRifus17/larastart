@@ -169,11 +169,19 @@
                 
                 this.form.put("/api/user/" + this.form.id)
                 .then(() => {
-                    
+                    $('#add-user').modal('hide')     
+                    this.loadUsers()  
+                    swal.fire(
+                        'Update!',
+                        'Your file has been update.',
+                        'success'
+                    )         
+                    this.$Progress.finish()                    
                 })
                 .catch(() => {
                     this.$Progress.fail()
                 })
+
             },
             editUser(user) {
                 this.editMode = true

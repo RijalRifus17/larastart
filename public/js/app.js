@@ -2004,7 +2004,15 @@ __webpack_require__.r(__webpack_exports__);
 
       // console.log('editing data');
       this.$Progress.start();
-      this.form.put("/api/user/" + this.form.id).then(function () {})["catch"](function () {
+      this.form.put("/api/user/" + this.form.id).then(function () {
+        $('#add-user').modal('hide');
+
+        _this.loadUsers();
+
+        swal.fire('Update!', 'Your file has been update.', 'success');
+
+        _this.$Progress.finish();
+      })["catch"](function () {
         _this.$Progress.fail();
       });
     },

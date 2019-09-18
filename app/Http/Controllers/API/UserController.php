@@ -75,8 +75,14 @@ class UserController extends Controller
         
         $user->update($request->all());
 
-        return [
+        $this->validate($request, [
+            "name" => "required|string|max:191",
+            "email" => 'required|string|email|max:191|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:6'
+        ], $this->changeValidate());
 
+        return [
+            'message' => 'Updated Success'
         ];
     }
 
