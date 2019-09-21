@@ -25,6 +25,7 @@ import VueRouter from 'vue-router'
 import Profile from './components/Dashboard.vue'
 import Dashboard from './components/Profile.vue'
 import Users from './components/Users.vue'
+import Developer from './components/Developer.vue';
 import VueProgressBar from 'vue-progressbar'
 import Swal from 'sweetalert2'
 
@@ -34,6 +35,10 @@ Vue.use(VueRouter)
 var routes = [{
         path: '/dashboard',
         component: Profile
+    },
+    {
+        path: '/developer',
+        component: Developer
     },
     {
         path: '/profile',
@@ -63,6 +68,21 @@ Vue.use(VueProgressBar, {
     failedColor: 'red',
     height: '2px'
 })
+
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
 
 window.swal = Swal
 
